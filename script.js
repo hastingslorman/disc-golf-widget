@@ -35,9 +35,11 @@ const discImage = document.getElementById("disc-image");
 const previousButton = document.getElementById("previous-button");
 const nextButton = document.getElementById("next-button");
 const discCard = document.querySelector(".disc-card");
+const discCounter = document.getElementById("disc-counter");
 
 function showDisc() {
     discImage.src = "images/" + discs[currentDisc];
+    discCounter.textContent = 'Disc ${currentDisc + 1} of ${discs.length';
 }
 
 nextButton.addEventListener("click", function() {
