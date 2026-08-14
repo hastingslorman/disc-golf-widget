@@ -32,19 +32,18 @@ const discs = [
 let currentDisc = 0;
 
 const discImage = document.getElementById("disc-image");
+const discCounter = document.getElementById("disc-counter");
 const previousButton = document.getElementById("previous-button");
 const nextButton = document.getElementById("next-button");
 const discCard = document.querySelector(".disc-card");
-const discCounter = document.getElementById("disc-counter");
 
 
 function showDisc() {
     discImage.src = "images/" + discs[currentDisc];
-    discCounter.textContent = `Disc ${currentDisc + 1} of ${discs.length}`;
+    discCounter.textContent =
+        "Disc " + (currentDisc + 1) + " of " + discs.length;
 }
 
-
-// NEXT BUTTON
 
 nextButton.addEventListener("click", function() {
 
@@ -55,10 +54,9 @@ nextButton.addEventListener("click", function() {
     }
 
     showDisc();
+
 });
 
-
-// PREVIOUS BUTTON
 
 previousButton.addEventListener("click", function() {
 
@@ -69,36 +67,26 @@ previousButton.addEventListener("click", function() {
     }
 
     showDisc();
+
 });
 
 
-// -------------------------
-// SWIPE FUNCTION
-// -------------------------
-
 let touchStartX = 0;
-let touchEndX = 0;
 
 
 discCard.addEventListener("touchstart", function(event) {
-    touchStartX = event.changedTouches[0].screenX;
+
+    touchStartX = event.touches[0].clientX;
+
 });
 
 
 discCard.addEventListener("touchend", function(event) {
 
-    touchEndX = event.changedTouches[0].screenX;
-
-    handleSwipe();
-});
-
-
-function handleSwipe() {
+    const touchEndX = event.changedTouches[0].clientX;
 
     const swipeDistance = touchEndX - touchStartX;
 
-
-    // Swipe left = next disc
 
     if (swipeDistance < -50) {
 
@@ -109,10 +97,9 @@ function handleSwipe() {
         }
 
         showDisc();
+
     }
 
-
-    // Swipe right = previous disc
 
     if (swipeDistance > 50) {
 
@@ -123,10 +110,10 @@ function handleSwipe() {
         }
 
         showDisc();
+
     }
-}
 
+});
 
-// Show the first disc and counter when page loads
 
 showDisc();
