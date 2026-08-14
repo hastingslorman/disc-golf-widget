@@ -66,47 +66,55 @@ previousButton.addEventListener("click", function() {
 // -------------------------
 
 let touchStartX = 0;
-let currentTouchX = 0;
+let touchCurrentX = 0;
 let isDragging = false;
 
 discCard.addEventListener("touchstart", function(event) {
     touchStartX = event.touches[0].clientX;
-    currentTouchX = touchStartX;
+    touchCurrentX = touchStartX;
     isDragging = true;
 
-    // Turn off the transition while the finger is moving
     discCard.style.transition = "none";
-});
+}, { passive: true });
+
 
 discCard.addEventListener("touchmove", function(event) {
     if (!isDragging) return;
 
-    currentTouchX = event.touches[0].clientX;
+    touchCurrentX = event.touches[0].clientX;
 
-    const moveX = currentTouchX - touchStartX;
+    const distance = touchCurrentX - touchStartX;
 
-    // Slight rotation as the card moves
-    const rotation = moveX * 0.05;
+    // Make the card follow your finger
+    const rotation = distance * 0.04;
 
     discCard.style.transform =
-        `translateX(${moveX}px) rotate(${rotation}deg)`;
-});
+        `translateX(${distance}px) rotate(${rotation}deg)`;
+
+}, { passive: true });
+
 
 discCard.addEventListener("touchend", function() {
     if (!isDragging) return;
 
     isDragging = false;
 
-    const swipeDistance = currentTouchX - touchStartX;
+    const distance = touchCurrentX - touchStartX;
 
-    // Swipe left
-    if (swipeDistance < -100) {
+    // -------------------------
+    // SWIPE LEFT
+    // -------------------------
 
-        discCard.style.transition = "transform 0.3s ease-out";
+    if (distance < -100) {
+
+        discCard.style.transition =
+            "transform 0.35s cubic-bezier(.2,.8,.2,1)";
+
         discCard.style.transform =
             "translateX(-120vw) rotate(-15deg)";
 
         setTimeout(function() {
+
             currentDisc++;
 
             if (currentDisc >= discs.length) {
@@ -116,26 +124,37 @@ discCard.addEventListener("touchend", function() {
             showDisc();
 
             discCard.style.transition = "none";
-            discCard.style.transform = "translateX(120vw) rotate(15deg)";
+            discCard.style.transform =
+                "translateX(120vw) rotate(15deg)";
 
-            setTimeout(function() {
-                discCard.style.transition =
-                    "transform 0.3s ease-out";
-                discCard.style.transform =
-                    "translateX(0) rotate(0)";
-            }, 30);
+            requestAnimationFrame(function() {
+                requestAnimationFrame(function() {
 
-        }, 300);
+                    discCard.style.transition =
+                        "transform 0.35s cubic-bezier(.2,.8,.2,1)";
+
+                    discCard.style.transform =
+                        "translateX(0) rotate(0deg)";
+                });
+            });
+
+        }, 350);
     }
 
-    // Swipe right
-    else if (swipeDistance > 100) {
+    // -------------------------
+    // SWIPE RIGHT
+    // -------------------------
 
-        discCard.style.transition = "transform 0.3s ease-out";
+    else if (distance > 100) {
+
+        discCard.style.transition =
+            "transform 0.35s cubic-bezier(.2,.8,.2,1)";
+
         discCard.style.transform =
             "translateX(120vw) rotate(15deg)";
 
         setTimeout(function() {
+
             currentDisc--;
 
             if (currentDisc < 0) {
@@ -148,20 +167,31 @@ discCard.addEventListener("touchend", function() {
             discCard.style.transform =
                 "translateX(-120vw) rotate(-15deg)";
 
-            setTimeout(function() {
-                discCard.style.transition =
-                    "transform 0.3s ease-out";
-                discCard.style.transform =
-                    "translateX(0) rotate(0)";
-            }, 30);
+            requestAnimationFrame(function() {
+                requestAnimationFrame(function() {
 
-        }, 300);
+                    discCard.style.transition =
+                        "transform 0.35s cubic-bezier(.2,.8,.2,1)";
+
+                    discCard.style.transform =
+                        "translateX(0) rotate(0deg)";
+                });
+            });
+
+        }, 350);
     }
 
-    // Small movement = return card to center
+    // -------------------------
+    // NOT ENOUGH TO SWIPE
+    // -------------------------
+
     else {
-        discCard.style.transition = "transform 0.25s ease-out";
+
+        discCard.style.transition =
+            "transform 0.3s cubic-bezier(.2,.8,.2,1)";
+
         discCard.style.transform =
-            "translateX(0) rotate(0)";
+            "translateX(0) rotate(0deg)";
     }
+
 });
