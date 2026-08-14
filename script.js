@@ -45,8 +45,9 @@ function showDisc() {
 }
 
 
-nextButton.addEventListener("click", function() {
+// NEXT BUTTON
 
+nextButton.addEventListener("click", function() {
     currentDisc++;
 
     if (currentDisc >= discs.length) {
@@ -54,12 +55,12 @@ nextButton.addEventListener("click", function() {
     }
 
     showDisc();
-
 });
 
 
-previousButton.addEventListener("click", function() {
+// PREVIOUS BUTTON
 
+previousButton.addEventListener("click", function() {
     currentDisc--;
 
     if (currentDisc < 0) {
@@ -67,15 +68,24 @@ previousButton.addEventListener("click", function() {
     }
 
     showDisc();
-
 });
 
 
+// SWIPE
+
 let touchStartX = 0;
+let isTouchingCard = false;
 
 
 discCard.addEventListener("touchstart", function(event) {
 
+    // Don't treat button presses as swipes
+    if (event.target.closest("button")) {
+        isTouchingCard = false;
+        return;
+    }
+
+    isTouchingCard = true;
     touchStartX = event.touches[0].clientX;
 
 });
@@ -83,10 +93,18 @@ discCard.addEventListener("touchstart", function(event) {
 
 discCard.addEventListener("touchend", function(event) {
 
-    const touchEndX = event.changedTouches[0].clientX;
+    // Ignore button touches
+    if (!isTouchingCard) {
+        return;
+    }
 
+    const touchEndX = event.changedTouches[0].clientX;
     const swipeDistance = touchEndX - touchStartX;
 
+    isTouchingCard = false;
+
+
+    // Swipe left = next disc
 
     if (swipeDistance < -50) {
 
@@ -97,9 +115,10 @@ discCard.addEventListener("touchend", function(event) {
         }
 
         showDisc();
-
     }
 
+
+    // Swipe right = previous disc
 
     if (swipeDistance > 50) {
 
@@ -110,10 +129,11 @@ discCard.addEventListener("touchend", function(event) {
         }
 
         showDisc();
-
     }
 
 });
 
+
+// Show first disc
 
 showDisc();
