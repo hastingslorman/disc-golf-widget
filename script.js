@@ -65,41 +65,47 @@ previousButton.addEventListener("click", function() {
 // SMOOTH SWIPE FUNCTION
 // -------------------------
 
-let touchStartX = 0;
-let touchCurrentX = 0;
-let isDragging = false;
+let startX = 0;
+let currentX = 0;
+let dragging = false;
 
-discCard.addEventListener("touchstart", function(event) {
-    touchStartX = event.touches[0].clientX;
-    touchCurrentX = touchStartX;
-    isDragging = true;
+discCard.addEventListener("pointerdown", function(event) {
+
+    dragging = true;
+    startX = event.clientX;
+    currentX = startX;
+
+    discCard.setPointerCapture(event.pointerId);
 
     discCard.style.transition = "none";
-}, { passive: true });
+
+});
 
 
-discCard.addEventListener("touchmove", function(event) {
-    if (!isDragging) return;
+discCard.addEventListener("pointermove", function(event) {
 
-    touchCurrentX = event.touches[0].clientX;
+    if (!dragging) return;
 
-    const distance = touchCurrentX - touchStartX;
+    currentX = event.clientX;
 
-    // Make the card follow your finger
+    const distance = currentX - startX;
+
+    // Small rotation makes the card feel more natural
     const rotation = distance * 0.04;
 
     discCard.style.transform =
         `translateX(${distance}px) rotate(${rotation}deg)`;
 
-}, { passive: true });
+});
 
 
-discCard.addEventListener("touchend", function() {
-    if (!isDragging) return;
+discCard.addEventListener("pointerup", function(event) {
 
-    isDragging = false;
+    if (!dragging) return;
 
-    const distance = touchCurrentX - touchStartX;
+    dragging = false;
+
+    const distance = currentX - startX;
 
     // -------------------------
     // SWIPE LEFT
@@ -108,7 +114,7 @@ discCard.addEventListener("touchend", function() {
     if (distance < -100) {
 
         discCard.style.transition =
-            "transform 0.35s cubic-bezier(.2,.8,.2,1)";
+            "transform 0.35s ease-out";
 
         discCard.style.transform =
             "translateX(-120vw) rotate(-15deg)";
@@ -124,22 +130,23 @@ discCard.addEventListener("touchend", function() {
             showDisc();
 
             discCard.style.transition = "none";
+
             discCard.style.transform =
                 "translateX(120vw) rotate(15deg)";
 
             requestAnimationFrame(function() {
-                requestAnimationFrame(function() {
 
-                    discCard.style.transition =
-                        "transform 0.35s cubic-bezier(.2,.8,.2,1)";
+                discCard.style.transition =
+                    "transform 0.35s ease-out";
 
-                    discCard.style.transform =
-                        "translateX(0) rotate(0deg)";
-                });
+                discCard.style.transform =
+                    "translateX(0) rotate(0deg)";
+
             });
 
         }, 350);
     }
+
 
     // -------------------------
     // SWIPE RIGHT
@@ -148,7 +155,7 @@ discCard.addEventListener("touchend", function() {
     else if (distance > 100) {
 
         discCard.style.transition =
-            "transform 0.35s cubic-bezier(.2,.8,.2,1)";
+            "transform 0.35s ease-out";
 
         discCard.style.transform =
             "translateX(120vw) rotate(15deg)";
@@ -164,22 +171,23 @@ discCard.addEventListener("touchend", function() {
             showDisc();
 
             discCard.style.transition = "none";
+
             discCard.style.transform =
                 "translateX(-120vw) rotate(-15deg)";
 
             requestAnimationFrame(function() {
-                requestAnimationFrame(function() {
 
-                    discCard.style.transition =
-                        "transform 0.35s cubic-bezier(.2,.8,.2,1)";
+                discCard.style.transition =
+                    "transform 0.35s ease-out";
 
-                    discCard.style.transform =
-                        "translateX(0) rotate(0deg)";
-                });
+                discCard.style.transform =
+                    "translateX(0) rotate(0deg)";
+
             });
 
         }, 350);
     }
+
 
     // -------------------------
     // NOT ENOUGH TO SWIPE
@@ -188,10 +196,23 @@ discCard.addEventListener("touchend", function() {
     else {
 
         discCard.style.transition =
-            "transform 0.3s cubic-bezier(.2,.8,.2,1)";
+            "transform 0.25s ease-out";
 
         discCard.style.transform =
             "translateX(0) rotate(0deg)";
     }
+
+});
+
+
+discCard.addEventListener("pointercancel", function() {
+
+    dragging = false;
+
+    discCard.style.transition =
+        "transform 0.25s ease-out";
+
+    discCard.style.transform =
+        "translateX(0) rotate(0deg)";
 
 });
