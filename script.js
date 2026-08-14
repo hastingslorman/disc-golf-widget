@@ -62,45 +62,106 @@ previousButton.addEventListener("click", function() {
 
 
 // -------------------------
-// SWIPE FUNCTION
+// SMOOTH SWIPE FUNCTION
 // -------------------------
 
 let touchStartX = 0;
-let touchEndX = 0;
+let currentTouchX = 0;
+let isDragging = false;
 
 discCard.addEventListener("touchstart", function(event) {
-    touchStartX = event.changedTouches[0].screenX;
+    touchStartX = event.touches[0].clientX;
+    currentTouchX = touchStartX;
+    isDragging = true;
+
+    // Turn off the transition while the finger is moving
+    discCard.style.transition = "none";
 });
 
-discCard.addEventListener("touchend", function(event) {
-    touchEndX = event.changedTouches[0].screenX;
+discCard.addEventListener("touchmove", function(event) {
+    if (!isDragging) return;
 
-    handleSwipe();
+    currentTouchX = event.touches[0].clientX;
+
+    const moveX = currentTouchX - touchStartX;
+
+    // Slight rotation as the card moves
+    const rotation = moveX * 0.05;
+
+    discCard.style.transform =
+        `translateX(${moveX}px) rotate(${rotation}deg)`;
 });
 
-function handleSwipe() {
+discCard.addEventListener("touchend", function() {
+    if (!isDragging) return;
 
-    const swipeDistance = touchEndX - touchStartX;
+    isDragging = false;
 
-    // Swipe left = next disc
-    if (swipeDistance < -50) {
-        currentDisc++;
+    const swipeDistance = currentTouchX - touchStartX;
 
-        if (currentDisc >= discs.length) {
-            currentDisc = 0;
-        }
+    // Swipe left
+    if (swipeDistance < -100) {
 
-        showDisc();
+        discCard.style.transition = "transform 0.3s ease-out";
+        discCard.style.transform =
+            "translateX(-120vw) rotate(-15deg)";
+
+        setTimeout(function() {
+            currentDisc++;
+
+            if (currentDisc >= discs.length) {
+                currentDisc = 0;
+            }
+
+            showDisc();
+
+            discCard.style.transition = "none";
+            discCard.style.transform = "translateX(120vw) rotate(15deg)";
+
+            setTimeout(function() {
+                discCard.style.transition =
+                    "transform 0.3s ease-out";
+                discCard.style.transform =
+                    "translateX(0) rotate(0)";
+            }, 30);
+
+        }, 300);
     }
 
-    // Swipe right = previous disc
-    if (swipeDistance > 50) {
-        currentDisc--;
+    // Swipe right
+    else if (swipeDistance > 100) {
 
-        if (currentDisc < 0) {
-            currentDisc = discs.length - 1;
-        }
+        discCard.style.transition = "transform 0.3s ease-out";
+        discCard.style.transform =
+            "translateX(120vw) rotate(15deg)";
 
-        showDisc();
+        setTimeout(function() {
+            currentDisc--;
+
+            if (currentDisc < 0) {
+                currentDisc = discs.length - 1;
+            }
+
+            showDisc();
+
+            discCard.style.transition = "none";
+            discCard.style.transform =
+                "translateX(-120vw) rotate(-15deg)";
+
+            setTimeout(function() {
+                discCard.style.transition =
+                    "transform 0.3s ease-out";
+                discCard.style.transform =
+                    "translateX(0) rotate(0)";
+            }, 30);
+
+        }, 300);
     }
-}
+
+    // Small movement = return card to center
+    else {
+        discCard.style.transition = "transform 0.25s ease-out";
+        discCard.style.transform =
+            "translateX(0) rotate(0)";
+    }
+});
