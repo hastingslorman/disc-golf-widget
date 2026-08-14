@@ -22,7 +22,6 @@ h1 {
     border: 1px solid #e5e5e5;
     border-radius: 20px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-    touch-action: pan-y;
 }
 
 .disc-card img {
@@ -64,6 +63,7 @@ h1 {
     background-color: white;
     font-size: 14px;
     cursor: pointer;
+    touch-action: manipulation;
 }
 
 .buttons button:hover {
