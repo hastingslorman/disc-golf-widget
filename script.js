@@ -78,7 +78,6 @@ discCard.addEventListener("pointerdown", function(event) {
     discCard.setPointerCapture(event.pointerId);
 
     discCard.style.transition = "none";
-
 });
 
 
@@ -89,13 +88,10 @@ discCard.addEventListener("pointermove", function(event) {
     currentX = event.clientX;
 
     const distance = currentX - startX;
-
-    // Small rotation makes the card feel more natural
     const rotation = distance * 0.04;
 
     discCard.style.transform =
         `translateX(${distance}px) rotate(${rotation}deg)`;
-
 });
 
 
@@ -113,14 +109,16 @@ discCard.addEventListener("pointerup", function(event) {
 
     if (distance < -100) {
 
+        // Fly current card away
         discCard.style.transition =
-            "transform 0.35s ease-out";
+            "transform 0.4s cubic-bezier(0.25, 1, 0.5, 1)";
 
         discCard.style.transform =
-            "translateX(-120vw) rotate(-15deg)";
+            "translateX(-130vw) rotate(-12deg)";
 
         setTimeout(function() {
 
+            // Change disc
             currentDisc++;
 
             if (currentDisc >= discs.length) {
@@ -129,22 +127,22 @@ discCard.addEventListener("pointerup", function(event) {
 
             showDisc();
 
+            // Instantly place new card on right
             discCard.style.transition = "none";
+            discCard.style.transform =
+                "translateX(130vw) rotate(12deg)";
+
+            // Force browser to recognize new position
+            discCard.offsetHeight;
+
+            // Slide new card into center
+            discCard.style.transition =
+                "transform 0.4s cubic-bezier(0.25, 1, 0.5, 1)";
 
             discCard.style.transform =
-                "translateX(120vw) rotate(15deg)";
+                "translateX(0) rotate(0deg)";
 
-            requestAnimationFrame(function() {
-
-                discCard.style.transition =
-                    "transform 0.35s ease-out";
-
-                discCard.style.transform =
-                    "translateX(0) rotate(0deg)";
-
-            });
-
-        }, 350);
+        }, 400);
     }
 
 
@@ -154,14 +152,16 @@ discCard.addEventListener("pointerup", function(event) {
 
     else if (distance > 100) {
 
+        // Fly current card away
         discCard.style.transition =
-            "transform 0.35s ease-out";
+            "transform 0.4s cubic-bezier(0.25, 1, 0.5, 1)";
 
         discCard.style.transform =
-            "translateX(120vw) rotate(15deg)";
+            "translateX(130vw) rotate(12deg)";
 
         setTimeout(function() {
 
+            // Change disc
             currentDisc--;
 
             if (currentDisc < 0) {
@@ -170,22 +170,22 @@ discCard.addEventListener("pointerup", function(event) {
 
             showDisc();
 
+            // Instantly place new card on left
             discCard.style.transition = "none";
+            discCard.style.transform =
+                "translateX(-130vw) rotate(-12deg)";
+
+            // Force browser to recognize new position
+            discCard.offsetHeight;
+
+            // Slide new card into center
+            discCard.style.transition =
+                "transform 0.4s cubic-bezier(0.25, 1, 0.5, 1)";
 
             discCard.style.transform =
-                "translateX(-120vw) rotate(-15deg)";
+                "translateX(0) rotate(0deg)";
 
-            requestAnimationFrame(function() {
-
-                discCard.style.transition =
-                    "transform 0.35s ease-out";
-
-                discCard.style.transform =
-                    "translateX(0) rotate(0deg)";
-
-            });
-
-        }, 350);
+        }, 400);
     }
 
 
@@ -196,7 +196,7 @@ discCard.addEventListener("pointerup", function(event) {
     else {
 
         discCard.style.transition =
-            "transform 0.25s ease-out";
+            "transform 0.3s cubic-bezier(0.25, 1, 0.5, 1)";
 
         discCard.style.transform =
             "translateX(0) rotate(0deg)";
@@ -210,9 +210,8 @@ discCard.addEventListener("pointercancel", function() {
     dragging = false;
 
     discCard.style.transition =
-        "transform 0.25s ease-out";
+        "transform 0.3s ease-out";
 
     discCard.style.transform =
         "translateX(0) rotate(0deg)";
-
 });
