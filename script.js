@@ -231,7 +231,7 @@ const discs = [
         weight: "177g",
         type: "Midrange",
         description: "Understable Midrange",
-        status: "Retired"
+        status: "Archived"
     },
     {
         image: "disc_27.png",
