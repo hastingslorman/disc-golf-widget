@@ -26,7 +26,6 @@ const discs = [
     "disc_25.png",
     "disc_26.png",
     "disc_27.png",
-    "disc_28.png"
 ];
 
 let currentDisc = 0;
